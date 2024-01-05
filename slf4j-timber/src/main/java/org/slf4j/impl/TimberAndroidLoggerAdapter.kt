@@ -22,68 +22,70 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+package org.slf4j.impl
 
-package org.slf4j.impl;
-
-import android.util.Log;
-
-import org.slf4j.helpers.FormattingTuple;
-import org.slf4j.helpers.MarkerIgnoringBase;
-import org.slf4j.helpers.MessageFormatter;
-
-import timber.log.Timber;
+import android.util.Log
+import org.slf4j.helpers.MarkerIgnoringBase
+import org.slf4j.helpers.MessageFormatter
+import timber.log.Timber
 
 /**
- * <p>A simple implementation that delegates all log requests to the Jake Wharton's Timber
- * logging facilities. Note that this logger does not support {@link org.slf4j.Marker}.
+ *
+ * A simple implementation that delegates all log requests to the Jake Wharton's Timber
+ * logging facilities. Note that this logger does not support [org.slf4j.Marker].
  * Methods taking marker data as parameter simply invoke the eponymous method
- * without the Marker argument, discarding any marker data in the process.</p>
- * <p>
- * <p>The logging levels specified for SLF4J can be almost directly mapped to
+ * without the Marker argument, discarding any marker data in the process.
+ *
+ *
+ *
+ * The logging levels specified for SLF4J can be almost directly mapped to
  * the levels that exist in Timber platform. The following table
- * shows the mapping implemented by this logger.</p>
- * <p>
+ * shows the mapping implemented by this logger.
+ *
+ *
  * <table border="1">
- * <tr><th><b>SLF4J<b></th><th><b>Android</b></th></tr>
- * <tr><td>TRACE</td><td>{@link android.util.Log#VERBOSE}</td></tr>
- * <tr><td>DEBUG</td><td>{@link android.util.Log#DEBUG}</td></tr>
- * <tr><td>INFO</td><td>{@link android.util.Log#INFO}</td></tr>
- * <tr><td>WARN</td><td>{@link android.util.Log#WARN}</td></tr>
- * <tr><td>ERROR</td><td>{@link android.util.Log#ERROR}</td></tr>
- * </table>
- * <p>
- * <p>Use loggers as usual:
- * <ul>
- * <li>
- * Declare a logger<br/>
- * <code>private static final Logger logger = LoggerFactory.getLogger(MyClass.class);</code>
- * </li>
- * <li>
- * Invoke logging methods, e.g.,<br/>
- * <code>logger.debug("Some log message. Details: {}", someObject);</code><br/>
- * <code>logger.debug("Some log message with varargs. Details: {}, {}, {}", someObject1, someObject2, someObject3);</code>
- * </li>
- * </ul>
- * </p>
- * <p>
- * <p>Logger instances created using the LoggerFactory are named either according to the name
+ * <tr><th>**SLF4J******</th><th>**Android**</th></tr>
+ * <tr><td>TRACE</td><td>[android.util.Log.VERBOSE]</td></tr>
+ * <tr><td>DEBUG</td><td>[android.util.Log.DEBUG]</td></tr>
+ * <tr><td>INFO</td><td>[android.util.Log.INFO]</td></tr>
+ * <tr><td>WARN</td><td>[android.util.Log.WARN]</td></tr>
+ * <tr><td>ERROR</td><td>[android.util.Log.ERROR]</td></tr>
+</table> *
+ *
+ *
+ *
+ * Use loggers as usual:
+ *
+ *  *
+ * Declare a logger<br></br>
+ * `private static final Logger logger = LoggerFactory.getLogger(MyClass.class);`
+ *
+ *  *
+ * Invoke logging methods, e.g.,<br></br>
+ * `logger.debug("Some log message. Details: {}", someObject);`<br></br>
+ * `logger.debug("Some log message with varargs. Details: {}, {}, {}", someObject1, someObject2, someObject3);`
+ *
+ *
+ *
+ *
+ *
+ *
+ * Logger instances created using the LoggerFactory are named either according to the name
  * or the fully qualified class name of the class given as a parameter.
  * Each logger name will be used as the log message tag on the Android platform. No truncating
  * will take place since Timber handles this itself.
- * </p>
  *
- * @author Andrey Korzhevskiy <a.korzhevskiy@gmail.com>
- * @author Patrick Favre-Bulle <patrick.favrebulle@gmail.com>
+ *
+ * @author Andrey Korzhevskiy <a.korzhevskiy></a.korzhevskiy>@gmail.com>
+ * @author Patrick Favre-Bulle <patrick.favrebulle></patrick.favrebulle>@gmail.com>
  */
-class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
-    private static final long serialVersionUID = -1227274521521287937L;
-
+internal class TimberAndroidLoggerAdapter(tag: String?) : MarkerIgnoringBase() {
     /**
-     * Package access allows only {@link TimberAndroidLoggerFactory} to instantiate
+     * Package access allows only [TimberAndroidLoggerFactory] to instantiate
      * SimpleLogger instances.
      */
-    TimberAndroidLoggerAdapter(String tag) {
-        this.name = tag;
+    init {
+        name = tag
     }
 
     /**
@@ -91,8 +93,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @return True if this Logger is enabled for level VERBOSE, false otherwise.
      */
-    public boolean isTraceEnabled() {
-        return isLoggable(Log.VERBOSE);
+    override fun isTraceEnabled(): Boolean {
+        return isLoggable(Log.VERBOSE)
     }
 
     /**
@@ -100,57 +102,63 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @param msg - the message object to be logged
      */
-    public void trace(String msg) {
-        log(Log.VERBOSE, msg, null);
+    override fun trace(msg: String) {
+        log(Log.VERBOSE, msg, null)
     }
 
     /**
      * Log a message at level VERBOSE according to the specified format and
      * argument.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for level VERBOSE.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg    the argument
      */
-    public void trace(String format, Object arg) {
-        formatAndLog(Log.VERBOSE, format, arg);
+    override fun trace(format: String, arg: Any) {
+        formatAndLog(Log.VERBOSE, format, arg)
     }
 
     /**
      * Log a message at level VERBOSE according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the VERBOSE level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    public void trace(String format, Object arg1, Object arg2) {
-        formatAndLog(Log.VERBOSE, format, arg1, arg2);
+    override fun trace(format: String, arg1: Any, arg2: Any) {
+        formatAndLog(Log.VERBOSE, format, arg1, arg2)
     }
 
     /**
      * Log a message at level VERBOSE according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the VERBOSE level.
-     * </p>
+     *
      *
      * @param format   the format string
      * @param argArray an array of arguments
      */
-    public void trace(String format, Object... argArray) {
-        formatAndLog(Log.VERBOSE, format, argArray);
+    override fun trace(format: String, vararg argArray: Any) {
+        formatAndLog(Log.VERBOSE, format, *argArray)
     }
 
     /**
@@ -159,8 +167,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    public void trace(String msg, Throwable t) {
-        log(Log.VERBOSE, msg, t);
+    override fun trace(msg: String, t: Throwable) {
+        log(Log.VERBOSE, msg, t)
     }
 
     /**
@@ -168,8 +176,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @return True if this Logger is enabled for level DEBUG, false otherwise.
      */
-    public boolean isDebugEnabled() {
-        return isLoggable(Log.DEBUG);
+    override fun isDebugEnabled(): Boolean {
+        return isLoggable(Log.DEBUG)
     }
 
     /**
@@ -177,56 +185,62 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @param msg - the message object to be logged
      */
-    public void debug(String msg) {
-        log(Log.DEBUG, msg, null);
+    override fun debug(msg: String) {
+        log(Log.DEBUG, msg, null)
     }
 
     /**
      * Log a message at level DEBUG according to the specified format and argument.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for level DEBUG.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg    the argument
      */
-    public void debug(String format, Object arg) {
-        formatAndLog(Log.DEBUG, format, arg);
+    override fun debug(format: String, arg: Any) {
+        formatAndLog(Log.DEBUG, format, arg)
     }
 
     /**
      * Log a message at level DEBUG according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the DEBUG level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    public void debug(String format, Object arg1, Object arg2) {
-        formatAndLog(Log.DEBUG, format, arg1, arg2);
+    override fun debug(format: String, arg1: Any, arg2: Any) {
+        formatAndLog(Log.DEBUG, format, arg1, arg2)
     }
 
     /**
      * Log a message at level DEBUG according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the DEBUG level.
-     * </p>
+     *
      *
      * @param format   the format string
      * @param argArray an array of arguments
      */
-    public void debug(String format, Object... argArray) {
-        formatAndLog(Log.DEBUG, format, argArray);
+    override fun debug(format: String, vararg argArray: Any) {
+        formatAndLog(Log.DEBUG, format, *argArray)
     }
 
     /**
@@ -235,8 +249,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    public void debug(String msg, Throwable t) {
-        log(Log.DEBUG, msg, t);
+    override fun debug(msg: String, t: Throwable) {
+        log(Log.DEBUG, msg, t)
     }
 
     /**
@@ -244,8 +258,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @return True if this Logger is enabled for the INFO level, false otherwise.
      */
-    public boolean isInfoEnabled() {
-        return isLoggable(Log.INFO);
+    override fun isInfoEnabled(): Boolean {
+        return isLoggable(Log.INFO)
     }
 
     /**
@@ -253,56 +267,62 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @param msg - the message object to be logged
      */
-    public void info(String msg) {
-        log(Log.INFO, msg, null);
+    override fun info(msg: String) {
+        log(Log.INFO, msg, null)
     }
 
     /**
      * Log a message at level INFO according to the specified format and argument.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the INFO level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg    the argument
      */
-    public void info(String format, Object arg) {
-        formatAndLog(Log.INFO, format, arg);
+    override fun info(format: String, arg: Any) {
+        formatAndLog(Log.INFO, format, arg)
     }
 
     /**
      * Log a message at the INFO level according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the INFO level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    public void info(String format, Object arg1, Object arg2) {
-        formatAndLog(Log.INFO, format, arg1, arg2);
+    override fun info(format: String, arg1: Any, arg2: Any) {
+        formatAndLog(Log.INFO, format, arg1, arg2)
     }
 
     /**
      * Log a message at level INFO according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the INFO level.
-     * </p>
+     *
      *
      * @param format   the format string
      * @param argArray an array of arguments
      */
-    public void info(String format, Object... argArray) {
-        formatAndLog(Log.INFO, format, argArray);
+    override fun info(format: String, vararg argArray: Any) {
+        formatAndLog(Log.INFO, format, *argArray)
     }
 
     /**
@@ -312,8 +332,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    public void info(String msg, Throwable t) {
-        log(Log.INFO, msg, t);
+    override fun info(msg: String, t: Throwable) {
+        log(Log.INFO, msg, t)
     }
 
     /**
@@ -322,8 +342,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @return True if this Logger is enabled for the WARN level, false
      * otherwise.
      */
-    public boolean isWarnEnabled() {
-        return isLoggable(Log.WARN);
+    override fun isWarnEnabled(): Boolean {
+        return isLoggable(Log.WARN)
     }
 
     /**
@@ -331,57 +351,63 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @param msg - the message object to be logged
      */
-    public void warn(String msg) {
-        log(Log.WARN, msg, null);
+    override fun warn(msg: String) {
+        log(Log.WARN, msg, null)
     }
 
     /**
      * Log a message at the WARN level according to the specified format and
      * argument.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the WARN level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg    the argument
      */
-    public void warn(String format, Object arg) {
-        formatAndLog(Log.WARN, format, arg);
+    override fun warn(format: String, arg: Any) {
+        formatAndLog(Log.WARN, format, arg)
     }
 
     /**
      * Log a message at the WARN level according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the WARN level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    public void warn(String format, Object arg1, Object arg2) {
-        formatAndLog(Log.WARN, format, arg1, arg2);
+    override fun warn(format: String, arg1: Any, arg2: Any) {
+        formatAndLog(Log.WARN, format, arg1, arg2)
     }
 
     /**
      * Log a message at level WARN according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the WARN level.
-     * </p>
+     *
      *
      * @param format   the format string
      * @param argArray an array of arguments
      */
-    public void warn(String format, Object... argArray) {
-        formatAndLog(Log.WARN, format, argArray);
+    override fun warn(format: String, vararg argArray: Any) {
+        formatAndLog(Log.WARN, format, *argArray)
     }
 
     /**
@@ -391,8 +417,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    public void warn(String msg, Throwable t) {
-        log(Log.WARN, msg, t);
+    override fun warn(msg: String, t: Throwable) {
+        log(Log.WARN, msg, t)
     }
 
     /**
@@ -400,8 +426,8 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @return True if this Logger is enabled for level ERROR, false otherwise.
      */
-    public boolean isErrorEnabled() {
-        return isLoggable(Log.ERROR);
+    override fun isErrorEnabled(): Boolean {
+        return isLoggable(Log.ERROR)
     }
 
     /**
@@ -409,57 +435,63 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @param msg - the message object to be logged
      */
-    public void error(String msg) {
-        log(Log.ERROR, msg, null);
+    override fun error(msg: String) {
+        log(Log.ERROR, msg, null)
     }
 
     /**
      * Log a message at the ERROR level according to the specified format and
      * argument.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the ERROR level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg    the argument
      */
-    public void error(String format, Object arg) {
-        formatAndLog(Log.ERROR, format, arg);
+    override fun error(format: String, arg: Any) {
+        formatAndLog(Log.ERROR, format, arg)
     }
 
     /**
      * Log a message at the ERROR level according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the ERROR level.
-     * </p>
+     *
      *
      * @param format the format string
      * @param arg1   the first argument
      * @param arg2   the second argument
      */
-    public void error(String format, Object arg1, Object arg2) {
-        formatAndLog(Log.ERROR, format, arg1, arg2);
+    override fun error(format: String, arg1: Any, arg2: Any) {
+        formatAndLog(Log.ERROR, format, arg1, arg2)
     }
 
     /**
      * Log a message at level ERROR according to the specified format and
      * arguments.
-     * <p>
-     * <p>
+     *
+     *
+     *
+     *
      * This form avoids superfluous object creation when the logger is disabled
      * for the ERROR level.
-     * </p>
+     *
      *
      * @param format   the format string
      * @param argArray an array of arguments
      */
-    public void error(String format, Object... argArray) {
-        formatAndLog(Log.ERROR, format, argArray);
+    override fun error(format: String, vararg argArray: Any) {
+        formatAndLog(Log.ERROR, format, *argArray)
     }
 
     /**
@@ -469,20 +501,20 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      * @param msg the message accompanying the exception
      * @param t   the exception (throwable) to log
      */
-    public void error(String msg, Throwable t) {
-        log(Log.ERROR, msg, t);
+    override fun error(msg: String, t: Throwable) {
+        log(Log.ERROR, msg, t)
     }
 
-    private void formatAndLog(int priority, String format, Object... argArray) {
+    private fun formatAndLog(priority: Int, format: String, vararg argArray: Any) {
         if (isLoggable(priority)) {
-            FormattingTuple ft = MessageFormatter.arrayFormat(format, argArray);
-            logInternal(priority, ft.getMessage(), ft.getThrowable());
+            val ft = MessageFormatter.arrayFormat(format, argArray)
+            logInternal(priority, ft.message, ft.throwable)
         }
     }
 
-    private void log(int priority, String message, Throwable throwable) {
+    private fun log(priority: Int, message: String, throwable: Throwable?) {
         if (isLoggable(priority)) {
-            logInternal(priority, message, throwable);
+            logInternal(priority, message, throwable)
         }
     }
 
@@ -491,21 +523,20 @@ class TimberAndroidLoggerAdapter extends MarkerIgnoringBase {
      *
      * @return always true
      */
-    private boolean isLoggable(int priority) {
-        return Timber.treeCount() > 0;
+    private fun isLoggable(priority: Int): Boolean {
+        return Timber.treeCount > 0
     }
 
-    private void logInternal(int priority, String message, Throwable throwable) {
-        Timber.tag(name);
-
+    private fun logInternal(priority: Int, message: String?, throwable: Throwable?) {
+        Timber.tag(name)
         if (throwable != null) {
             if (message != null) {
-                Timber.log(priority, throwable, message);
+                Timber.log(priority, throwable, message)
             } else {
-                Timber.log(priority, throwable);
+                Timber.log(priority, throwable)
             }
         } else {
-            Timber.log(priority, message);
+            Timber.log(priority, message)
         }
     }
 }

@@ -1,75 +1,64 @@
-package at.favre.lib.app;
+package at.favre.lib.app
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import org.slf4j.LoggerFactory
+import timber.log.Timber
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+class MainActivity : AppCompatActivity() {
 
-import timber.log.Timber;
+    private val logger = LoggerFactory.getLogger(MainActivity::class.java)!!
 
-public class MainActivity extends AppCompatActivity {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-    Logger logger = LoggerFactory.getLogger(MainActivity.class);
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-    static {
-        Timber.plant(new Timber.DebugTree());
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener { view: View? ->
+            Snackbar.make(view!!, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+
+        logger.trace("testing slf4j trace")
+        logger.debug("testing slf4j debug")
+        logger.info("testing slf4j info")
+        logger.warn("testing slf4j warn")
+        logger.error("testing slf4j error")
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        logger.trace("testing slf4j trace");
-        logger.debug("testing slf4j debug");
-        logger.info("testing slf4j info");
-        logger.warn("testing slf4j warn");
-        logger.error("testing slf4j error");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        logger.debug("onResume");
+    override fun onResume() {
+        super.onResume()
+        logger.debug("onResume")
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        val id = item.itemId
+        return if (id == R.id.action_settings) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    companion object {
+        init {
+            Timber.plant(Timber.DebugTree())
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

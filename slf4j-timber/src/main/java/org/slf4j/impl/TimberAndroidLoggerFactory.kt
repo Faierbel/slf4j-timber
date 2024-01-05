@@ -22,37 +22,38 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+package org.slf4j.impl
 
-package org.slf4j.impl;
-
-import org.slf4j.ILoggerFactory;
-import org.slf4j.Logger;
-
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import org.slf4j.ILoggerFactory
+import org.slf4j.Logger
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 /**
- * TimberAndroidLoggerFactory is an implementation of {@link ILoggerFactory} returning
- * the appropriately named {@link TimberAndroidLoggerFactory} instance.
+ * TimberAndroidLoggerFactory is an implementation of [ILoggerFactory] returning
+ * the appropriately named [TimberAndroidLoggerFactory] instance.
  *
- * @author Patrick Favre-Bulle <patrick.favrebulle@gmail.com>
+ * @author Patrick Favre-Bulle <patrick.favrebulle></patrick.favrebulle>@gmail.com>
  */
-class TimberAndroidLoggerFactory implements ILoggerFactory {
-    static final String ANONYMOUS_TAG = "null";
-
-    private final ConcurrentMap<String, Logger> loggerMap = new ConcurrentHashMap<>();
+internal class TimberAndroidLoggerFactory : ILoggerFactory {
+    private val loggerMap: ConcurrentMap<String, Logger> = ConcurrentHashMap()
 
     /**
-     * Return an appropriate {@link TimberAndroidLoggerAdapter} instance by name.
+     * Return an appropriate [TimberAndroidLoggerAdapter] instance by name.
      */
-    public Logger getLogger(String name) {
-        String tag = name == null ? ANONYMOUS_TAG : name;
-        Logger logger = loggerMap.get(tag);
+    override fun getLogger(name: String?): Logger {
+        val tag = name ?: ANONYMOUS_TAG
+        var logger = loggerMap[tag]
         if (logger == null) {
-            Logger newInstance = new TimberAndroidLoggerAdapter(tag);
-            Logger oldInstance = loggerMap.putIfAbsent(tag, newInstance);
-            logger = oldInstance == null ? newInstance : oldInstance;
+            val newInstance: Logger = TimberAndroidLoggerAdapter(tag)
+            val oldInstance = loggerMap.putIfAbsent(tag, newInstance)
+            logger = oldInstance ?: newInstance
         }
-        return logger;
+        return logger
+    }
+
+    private companion object {
+
+        private const val ANONYMOUS_TAG = "null"
     }
 }

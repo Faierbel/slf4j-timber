@@ -1,23 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
-apply plugin: "com.github.kt3k.coveralls"
-apply from: "$rootDir/gradle/checkstyle.gradle"
-apply from: "$rootDir/gradle/jacoco-utils.gradle"
+apply plugin: 'kotlin-android'
+apply plugin: 'maven-publish'
 
 android {
-    testBuildType "release"
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    namespace "at.favre.lib.slf4j_timber"
+    compileSdk 34
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionNameLib
-
-        buildConfigField "String", "BUILD_NUMBER", "\"" + getCiBuildNumber() + "\""
-
-        consumerProguardFiles 'proguard-rules.pro'
+        minSdkVersion 21
+        targetSdkVersion 34
     }
 
     buildTypes {
@@ -25,29 +16,36 @@ android {
             minifyEnabled false
         }
     }
-
-    lintOptions {
+    lint {
         abortOnError false
     }
 
-    libraryVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "${project.name}-${variant.name}-${version}.aar"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            libraryProject(MavenPublication) {
+                setGroupId 'com.favre.lib'
+                setArtifactId 'slf4j-timber'
+                version '1.0'
+                artifact bundleReleaseAar
+            }
         }
     }
 }
 
-android.variantFilter { variant ->
-    if (variant.buildType.name == com.android.builder.core.BuilderConstants.DEBUG) {
-        variant.setIgnore(true)
-    }
-}
-
 dependencies {
-    implementation "com.jakewharton.timber:timber:$rootProject.ext.dependencies.timber"
-    implementation "org.slf4j:slf4j-api:$rootProject.ext.dependencies.slf4j"
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+    implementation "org.slf4j:slf4j-api:2.0.10"
 
-    testImplementation "junit:junit:$rootProject.ext.dependencies.junit"
+    testImplementation "junit:junit:4.13.2"
 }
-
-apply from: "$rootDir/gradle/publish.gradle"
