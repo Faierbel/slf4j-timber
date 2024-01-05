@@ -1,15 +1,16 @@
 # slf4j-timber
 
-The motivation of this project was to ease using existing libraries
+This fork of the library supports only slf4j 2.0. Previous versions are supported by
+the [original library.](https://github.com/patrickfav/slf4j-timber)
+
+This library makes it easy to use existing libraries
 which use SLF4J as their logging framework on the Google Android platform
 in combination with [Jake Wharton's Timber logging utility.](https://github.com/JakeWharton/timber)
-
-This project is based on the [_official_ slf4j-android implementation](https://mvnrepository.com/artifact/org.slf4j/slf4j-android) (+ bugfixes)
-but directs the logging calls mainly to `Timber.log(...);`.
 
 ## Description
 
 ### Log level mapping
+
 The priorities will be converted to LogCat's priority level and passed to
 `Timber.log(...);`. The `Log.isLoggable()` are not respected here, since `Timber`
 should be responsible to decide when to log what. The following table shows
